@@ -9,7 +9,6 @@ const path = __dirname + '/files';
  * 1. call https://jsonplaceholder.typicode.com/users and write it to file users.json
  */
 
-writeUsersFile().then();
 
 async function makeDirectory() {
     fs.stat(path, async function (error) {
@@ -49,6 +48,8 @@ async function writeUsersFile() {
     }
 }
 
+writeUsersFile().then();
+
 
 /**
  * 2. Let's work with running node script with some environment variables
@@ -56,8 +57,6 @@ async function writeUsersFile() {
  * If param is PRODUCTION  get data from https://jsonplaceholder.typicode.com/todos and write it to file todos.json
  * If param is DEV get data from https://jsonplaceholder.typicode.com/albums and write if to file albums.json
  */
-
-writeDataFile().then();
 
 
 async function writeDataFile() {
@@ -68,7 +67,7 @@ async function writeDataFile() {
         return false;
     }
 
-    const url = process.env.NODE_ENV === 'PRODUCTION' ? '/todos2' : '/albums3';
+    const url = process.env.NODE_ENV === 'PRODUCTION' ? '/todos' : '/albums';
     const fileName = process.env.NODE_ENV === 'PRODUCTION' ? 'todos.json' : 'albums.json';
 
     try {
@@ -90,3 +89,5 @@ async function writeDataFile() {
         console.error('Error when get data\n', error);
     }
 }
+
+writeDataFile().then();
