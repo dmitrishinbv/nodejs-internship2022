@@ -1,25 +1,35 @@
 const myArray = [1, 10, 3, 6, 'ArrayElement'];
 
 function checkIsNumber() {
-    let result = true;
-    myArray.forEach((item) => {
-        if (typeof item !== 'number') {
-            result = false;
-        }
-    });
+    // let result = true;
+    //     // myArray.forEach((item) => {
+    //     //     if (typeof item !== 'number') {
+    //     //         result = false;
+    //     //     }
+    //     // });
+    //     //
+    //     // return result;
 
-    return result;
+    //fix
+    const isNumber = (value) => typeof value === 'number';
+    return myArray.every(isNumber);
 }
 
-function checkIsBiggerThanFive() {
-    let result = false;
-    myArray.forEach((item) => {
-        if (Number(item) > 5) {
-            result = true;
-        }
-    });
 
-    return result;
+
+function checkIsBiggerThanFive() {
+    // let result = false;
+    // myArray.forEach((item) => {
+    //     if (Number(item) > 5) {
+    //         result = true;
+    //     }
+    // });
+
+   // return result;
+
+    //fix
+    const isBiggerThanFive = (value) => Number(value) > 5;
+    return myArray.some(isBiggerThanFive);
 }
 
 function getElementsBiggerThanFive() {
@@ -63,10 +73,14 @@ console.log(`6: ${myArray.filter(item => item === 6)}`);
  *  2. Log type of each element
  */
 
-myArray.forEach((item) => {
+// myArray.forEach((item) => {
+//     console.log(typeof item);
+// });
+
+//fix
+myArray.map((item) => {
     console.log(typeof item);
 });
-
 
 /**
  *  3. Check if all elements in array is Number
