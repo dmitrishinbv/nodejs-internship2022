@@ -5,6 +5,7 @@ const usersData = [{
     email: 'Sincere@april.biz',
     phone: '1-770-736-8031 x56442',
     website: 'hildegard.org',
+    password: 'test_001',
 }, {
     id: 2,
     name: 'Ervin Howell',
@@ -12,6 +13,7 @@ const usersData = [{
     email: 'Shanna@melissa.tv',
     phone: '010-692-6593 x09125',
     website: 'anastasia.net',
+    password: 'test_002',
 }, {
     id: 3,
     name: 'Clementine Bauch',
@@ -19,6 +21,7 @@ const usersData = [{
     email: 'Nathan@yesenia.net',
     phone: '1-463-123-4447',
     website: 'ramiro.info',
+    password: 'test_003',
 }, {
     id: 4,
     name: 'Patricia Lebsack',
@@ -26,6 +29,7 @@ const usersData = [{
     email: 'Julianne.OConner@kory.org',
     phone: '493-170-9623 x156',
     website: 'kale.biz',
+    password: 'test_004',
 }, {
     id: 5,
     name: 'Chelsey Dietrich',
@@ -33,6 +37,7 @@ const usersData = [{
     email: 'Lucio_Hettinger@annie.ca',
     phone: '(254)954-1289',
     website: 'demarco.info',
+    password: 'test_005',
 },
 ];
 

@@ -1,7 +1,6 @@
 const express = require('express');
 const http = require('http');
 
-// ROUTERS
 const UsersRouter = require('../components/users/router');
 
 module.exports = {

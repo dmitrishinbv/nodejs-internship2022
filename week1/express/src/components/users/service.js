@@ -2,90 +2,72 @@ require('./Users');
 
 const users = global.usersData;
 
-function findAll() {
-    return users || [];
+function findAll(options = null) {
+    if (!options) {
+        return users || [];
+    }
+
+    if (options.limit) {
+        return users.slice(0, Number(options.limit));
+    }
+
+    return users;
 }
 
 function findById(id) {
-    return Number(id) && Number(id) > 0 ? users.filter((item) => item.id === Number(id)) : [];
+    return users.filter((item) => item.id === id);
 }
 
-async function update(id, props) {
-    if (!id) {
-        return { status: 404, message: 'Param \'id\' is required' };
-    }
+function findByUsername(username) {
+    const user = users.filter((item) => item.username === username);
 
-    try {
-        const parseData = typeof props !== 'object' ? JSON.parse(props) : props;
-
-        if (!parseData || JSON.stringify(parseData) === '{}') {
-            return { status: 404, message: 'Empty request body is not a valid JSON document' };
-        }
-
-        const user = await findById(id);
-
-        if (!user || !user.length) {
-            return { status: 404, message: `User with id=${id} not found` };
-        }
-
-        const keys = Object.keys(parseData);
-
-        // eslint-disable-next-line no-restricted-syntax
-        for (const key of keys) {
-            if (user[0][key] === undefined) {
-                return { status: 404, message: `${key} is an invalid field name` };
-            }
-            user[0][key] = parseData[key];
-        }
-
-        return { status: 200, message: 'Success', data: user };
-    } catch (error) {
-        return { status: 500, message: `Error message ${error.message}` };
-    }
+    return user.length ? user[0] : null;
 }
 
-async function deleteById(id) {
-    const idNumber = Number(id);
+function update(id, props) {
+    const user = findById(id);
 
-    if (idNumber && idNumber > 0) {
-        if (users.find((item) => item.id === id)) {
-            const data = users.filter((item) => item.id !== id);
-
-            console.log(`Users after delete user id=${id}\n ${JSON.stringify(data)}`);
-
-            return { status: 200, message: `User  id=${id} was deleted`, data };
-        }
-
-        return { status: 200, message: `User  id=${id} not found`, data: users };
+    if (!user.length) {
+        return user;
     }
 
-    return { status: 404, message: `Param id=${id} is invalid` };
+    // eslint-disable-next-line no-restricted-syntax
+    // for (const key of Object.keys(props)) {
+    //     if (key !== 'id' && user[0][key] !== undefined) {
+    //         user[0][key] = props[key];
+    //     }
+    // }
+
+    Object.keys(props).forEach((key) => {
+        if (key !== 'id' && user[0][key] !== undefined) {
+            user[0][key] = props[key];
+        }
+    });
+
+    return user;
 }
 
-async function create(props) {
-    try {
-        const parseData = typeof props !== 'object' ? JSON.parse(props) : props;
+function deleteById(id) {
+    return users.find((item) => item.id === id)
+        ? users.filter((item) => item.id !== id)
+        : [];
+}
 
-        if (!parseData || !parseData.name || !parseData.email) {
-            return { status: 404, message: 'Params \'name\' and \'email\' are required' };
-        }
+function create(props) {
+    const params = props;
+    const userList = findAll();
 
-        const userList = await findAll();
+    params.id = userList && userList.length ? userList[userList.length - 1].id + 1 : 1;
+    users.push(props);
 
-        parseData.id = userList && userList.length ? userList[userList.length - 1].id + 1 : 1;
-        users.push(parseData);
-
-        return { status: 201, message: 'Created', data: users };
-    } catch (error) {
-        return { status: 500, message: `Error message ${error.message}` };
-    }
-    // console.log(`Users after create new user ${JSON.stringify(data)}`);
+    return users;
 }
 
 module.exports = {
     create,
     findAll,
     findById,
+    findByUsername,
     update,
     deleteById,
 };
