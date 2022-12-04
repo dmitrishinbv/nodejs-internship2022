@@ -15,7 +15,7 @@ function findAll(options = null) {
 }
 
 function findById(id) {
-    return users.filter((item) => item.id === id);
+    return users.filter((item) => item.id === Number(id));
 }
 
 function findByUsername(username) {
@@ -48,8 +48,8 @@ function update(id, props) {
 }
 
 function deleteById(id) {
-    return users.find((item) => item.id === id)
-        ? users.filter((item) => item.id !== id)
+    return users.find((item) => item.id === Number(id))
+        ? users.filter((item) => item.id !== Number(id))
         : [];
 }
 

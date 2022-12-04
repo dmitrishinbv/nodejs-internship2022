@@ -1,15 +1,31 @@
-const middleware = (schema) => (req, res, next) => {
-    const { error } = schema.validate(req.body);
+const middleware = (schema, isParams = false) => (req, res, next) => {
+    let params = null;
 
-    const valid = error == null;
-
-    if (valid) {
-        next();
+    if (isParams) {
+        if (Object.keys(req.params).length) {
+            params = req.params;
+        }
+        if (Object.keys(req.query).length) {
+            params = req.query;
+        }
     } else {
-        const { details } = error;
-        const message = details.map((i) => i.message).join(',');
+        params = req.body;
+    }
 
-        res.status(422).json({ error: message });
+    if (params) {
+        const { error } = schema.validate(params);
+        const valid = error == null;
+
+        if (valid) {
+            next();
+        } else {
+            const { details } = error;
+            const message = details.map((i) => i.message).join(',');
+
+            res.status(422).json({ error: message });
+        }
+    } else {
+        next();
     }
 };
 

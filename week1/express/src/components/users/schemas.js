@@ -24,6 +24,14 @@ const schemas = {
             ],
         }),
     }),
+    userId: Joi.object().keys({
+        id: Joi.number().integer().positive().required(),
+    }),
+    findAllParams: Joi.object().keys({
+        limit: Joi.number().integer().positive(),
+        page: Joi.number().integer().positive(),
+        page_size: Joi.number().integer().positive(),
+    }),
 };
 
 module.exports = schemas;
