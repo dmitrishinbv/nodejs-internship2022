@@ -12,7 +12,7 @@ router.get('/', auth, middleware(schemas.findAllParams, true), UserComponent.fin
 
 router.get('/:id', auth, middleware(schemas.userId, true), UserComponent.findById);
 
-router.post('/', auth, middleware(schemas.userPOST), UserComponent.create);
+router.post('/', middleware(schemas.userPOST), UserComponent.create);
 
 router.patch('/:id?', auth, middleware(schemas.userId, true), middleware(schemas.userPATCH), UserComponent.update);
 

@@ -2,27 +2,16 @@ const Joi = require('joi');
 
 const schemas = {
     userPOST: Joi.object().keys({
-        name: Joi.string().min(2).max(50).required(),
-        username: Joi.string().min(2).max(30).required(),
+        firstName: Joi.string().min(2).max(50).required(),
+        lastName: Joi.string().allow(null, ''),
         password: Joi.string().min(6).max(20).required(),
         email: Joi.string().email().required(),
-        website: Joi.string().uri({
-            scheme: [
-                /http?/, /https?/,
-            ],
-        }),
     }),
     userPATCH: Joi.object().keys({
-        id: Joi.number().integer().positive(),
-        name: Joi.string().min(2).max(50),
-        username: Joi.string().min(2).max(30),
-        password: Joi.string().min(6).max(20),
-        email: Joi.string().email(),
-        website: Joi.string().uri({
-            scheme: [
-                /http?/, /https?/,
-            ],
-        }),
+        firstName: Joi.string().min(2).max(50).required(),
+        lastName: Joi.string().allow(null, ''),
+        password: Joi.string().min(6).max(20).required(),
+        email: Joi.string().email().required(),
     }),
     userId: Joi.object().keys({
         id: Joi.number().integer().positive().required(),

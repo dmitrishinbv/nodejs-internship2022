@@ -1,5 +1,7 @@
 require('./Users');
 
+const { userModel } = require('./model');
+
 const users = global.usersData;
 
 function findAll(options = null) {
@@ -53,14 +55,20 @@ function deleteById(id) {
         : [];
 }
 
-function create(props) {
-    const params = props;
-    const userList = findAll();
+async function create(props) {
+    // console.log(props);
+    const user = userModel(props);
 
-    params.id = userList && userList.length ? userList[userList.length - 1].id + 1 : 1;
-    users.push(props);
+    try {
+        await user.save();
+        console.log('User has been saved successfully');
+    } catch (error) {
+        console.error(error);
 
-    return users;
+        return { error: error.message };
+    }
+
+    return true;
 }
 
 module.exports = {

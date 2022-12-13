@@ -20,9 +20,14 @@ async function create(req, res) {
     try {
         const result = await UserService.create(req.body);
 
+        if (result && result.error) {
+            return res.status(500).json({
+                error: result.error,
+            });
+        }
+
         return res.status(201).json({
             message: 'Created',
-            data: result,
         });
     } catch (error) {
         return res.status(500).json({
