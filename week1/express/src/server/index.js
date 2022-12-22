@@ -1,9 +1,9 @@
+require('../config/mongoConnection');
+
 const http = require('http');
 
 const server = require('./server');
 const events = require('./events');
-
-require('../config/mongoConnection');
 
 const PORT = server.get('port');
 

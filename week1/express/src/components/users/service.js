@@ -2,61 +2,65 @@ require('./Users');
 
 const { userModel } = require('./model');
 
-const users = global.usersData;
+async function findAll() {
+    try {
+        return await userModel.find();
+    } catch (error) {
+        console.error(error);
 
-function findAll(options = null) {
-    if (!options) {
-        return users || [];
+        return { error: error.message };
     }
+}
 
-    if (options.limit) {
-        return users.slice(0, Number(options.limit));
+async function findById(id) {
+    try {
+        return await userModel.findOne({ id });
+    } catch (error) {
+        console.error(error);
+
+        return { error: error.message };
     }
-
-    return users;
 }
 
-function findById(id) {
-    return users.filter((item) => item.id === Number(id));
-}
+async function findByEmail(email) {
+    try {
+        return await userModel.findOne({ email });
+    } catch (error) {
+        console.error(error);
 
-function findByUsername(username) {
-    const user = users.filter((item) => item.username === username);
-
-    return user.length ? user[0] : null;
-}
-
-function update(id, props) {
-    const user = findById(id);
-
-    if (!user.length) {
-        return user;
+        return { error: error.message };
     }
-
-    // eslint-disable-next-line no-restricted-syntax
-    // for (const key of Object.keys(props)) {
-    //     if (key !== 'id' && user[0][key] !== undefined) {
-    //         user[0][key] = props[key];
-    //     }
-    // }
-
-    Object.keys(props).forEach((key) => {
-        if (key !== 'id' && user[0][key] !== undefined) {
-            user[0][key] = props[key];
-        }
-    });
-
-    return user;
 }
 
-function deleteById(id) {
-    return users.find((item) => item.id === Number(id))
-        ? users.filter((item) => item.id !== Number(id))
-        : [];
+async function updateById(id, props) {
+    return userModel.findOneAndUpdate({ id }, props, { new: true });
+}
+
+async function updateByEmail(email, props) {
+    return userModel.findOneAndUpdate({ email }, props, { new: true });
+}
+
+async function deleteById(id) {
+    try {
+        return await userModel.deleteOne({ id });
+    } catch (error) {
+        console.error(error);
+
+        return { error: error.message };
+    }
+}
+
+async function deleteByEmail(email) {
+    try {
+        return await userModel.deleteOne({ email });
+    } catch (error) {
+        console.error(error);
+
+        return { error: error.message };
+    }
 }
 
 async function create(props) {
-    // console.log(props);
     const user = userModel(props);
 
     try {
@@ -75,7 +79,9 @@ module.exports = {
     create,
     findAll,
     findById,
-    findByUsername,
-    update,
+    findByEmail,
+    updateById,
+    updateByEmail,
     deleteById,
+    deleteByEmail,
 };

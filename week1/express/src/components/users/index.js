@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const UserService = require('./service');
 
 async function findAll(req, res) {
     try {
-        const users = UserService.findAll(req.query);
+        const users = await UserService.findAll(req.query);
 
         return res.status(200).json({
             data: users,
@@ -41,9 +42,9 @@ async function findById(req, res) {
     try {
         const id = req.params.id || req.query.id;
 
-        const user = UserService.findById(Number(id));
+        const user = await UserService.findById(id);
 
-        if (user && user.length) {
+        if (user) {
             return res.status(200).json({
                 data: user,
             });
@@ -63,11 +64,11 @@ async function findById(req, res) {
 async function deleteById(req, res) {
     try {
         const id = req.params.id || req.query.id;
-        const result = UserService.deleteById(id);
+        const result = await UserService.deleteById(id);
 
-        const status = result.length ? 200 : 404;
-        const data = result.length ? { message: 'Success', data: result }
-            : { error: `User with id ${id} not found`, data: result };
+        const status = result.acknowledged && result.deletedCount ? 200 : 404;
+        const data = status === 200 ? { message: 'Success', data: result }
+            : { error: `User with id ${id} not found`, data: null };
 
         return res.status(status).json(data);
     } catch (error) {
@@ -81,11 +82,21 @@ async function deleteById(req, res) {
 async function update(req, res) {
     try {
         const id = req.params.id || req.body.id;
-        const result = UserService.update(Number(id), req.body);
+        let result;
 
-        const status = result.length ? 200 : 404;
-        const data = result.length ? { message: 'Success', data: result }
-            : { error: `User with id ${id} not found`, data: result };
+        if (id) {
+            result = await UserService.updateById(id, req.body);
+        } else {
+            const email = req.params.email || req.body.email;
+
+            if (email) {
+                result = await UserService.updateByEmail(email, req.body);
+            }
+        }
+
+        const status = result ? 200 : 404;
+        const data = result ? { message: 'Success', data: result }
+            : { error: `User with id ${id} not found`, data: null };
 
         return res.status(status).json(data);
     } catch (error) {
@@ -97,29 +108,35 @@ async function update(req, res) {
 
 async function userSign(req, res) {
     try {
-        const { username, password } = req.body;
+        const { email, password } = req.body;
 
-        if (!(username && password)) {
-            return res.status(400).json({ error: 'Username and password are required' });
+        if (!(email && password)) {
+            return res.status(400).json({ error: 'Email and password are required' });
         }
 
-        const user = UserService.findByUsername(username);
+        const user = await UserService.findByEmail(email);
 
-        if (user && password === user.password) {
-            user.token = jwt.sign(
-                { user_id: user.id, name: user.username },
+        if (!user) {
+            return res.status(401).json({ message: 'User with this email not found' });
+        }
+
+        const passwordCompare = await bcrypt.compare(password, user.password);
+
+        if (user && passwordCompare) {
+            const token = jwt.sign(
+                { user_id: user.id, name: user.firstName },
                 process.env.TOKEN_SECRET,
                 {
                     expiresIn: '1h',
                 },
             );
 
-            res.status(200).setHeader('Authorization', user.token);
+            res.status(200).setHeader('Authorization', token);
 
-            return res.json(user);
+            return res.json({ token });
         }
 
-        return res.status(401).json({ message: 'The username and password your provided are invalid' });
+        return res.status(401).json({ message: 'The password your provided is invalid' });
     } catch (error) {
         return res.status(500).json({
             error: error.message,
