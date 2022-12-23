@@ -19,7 +19,7 @@ const schemas = {
     }),
     findAllParams: Joi.object().keys({
         limit: Joi.number().integer().positive(),
-        page: Joi.number().integer().positive(),
+        page: Joi.number().integer(),
         page_size: Joi.number().integer().positive(),
     }),
 };

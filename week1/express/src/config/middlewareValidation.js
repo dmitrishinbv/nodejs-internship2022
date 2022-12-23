@@ -11,7 +11,6 @@ const middleware = (schema, isParams = false) => (req, res, next) => {
     } else {
         params = req.body;
     }
-
     if (params) {
         const { error } = schema.validate(params);
         const valid = error == null;

@@ -1,5 +1,3 @@
-require('./Users');
-
 const { userModel } = require('./model');
 
 async function findAll() {
@@ -14,7 +12,7 @@ async function findAll() {
 
 async function findById(id) {
     try {
-        return await userModel.findOne({ id });
+        return await userModel.findOne({ _id: id });
     } catch (error) {
         console.error(error);
 
@@ -33,7 +31,7 @@ async function findByEmail(email) {
 }
 
 async function updateById(id, props) {
-    return userModel.findOneAndUpdate({ id }, props, { new: true });
+    return userModel.findOneAndUpdate({ _id: id }, props, { new: true });
 }
 
 async function updateByEmail(email, props) {
@@ -42,7 +40,7 @@ async function updateByEmail(email, props) {
 
 async function deleteById(id) {
     try {
-        return await userModel.deleteOne({ id });
+        return await userModel.deleteOne({ _id: id });
     } catch (error) {
         console.error(error);
 

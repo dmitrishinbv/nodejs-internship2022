@@ -10,12 +10,12 @@ router.post('/sign-in', UserComponent.userSign);
 
 router.get('/', auth, middleware(schemas.findAllParams, true), UserComponent.findAll);
 
-router.get('/:id?', auth, middleware(schemas.userId, true), UserComponent.findById);
+router.get('/:id?', auth, UserComponent.findById);
 
 router.post('/', middleware(schemas.userPOST), UserComponent.create);
 
 router.patch('/:id?', auth, middleware(schemas.userParams, true), middleware(schemas.userPATCH), UserComponent.update);
 
-router.delete('/:id', auth, middleware(schemas.userId, true), UserComponent.deleteById);
+router.delete('/:id', auth, UserComponent.deleteById);
 
 module.exports = router;
