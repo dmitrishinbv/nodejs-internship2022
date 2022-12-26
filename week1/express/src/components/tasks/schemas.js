@@ -4,11 +4,13 @@ const schemas = {
     taskPOST: Joi.object().keys({
         title: Joi.string().required(),
         description: Joi.string().allow(null, ''),
-        createdBy: Joi.string().allow(null, ''),
+        createdBy: Joi.string().valid(null, 'Manager', 'Project Manager', 'QA', 'Teach Lead'),
         estimatedTime: Joi.number().integer().positive().allow(null, 0),
+        status: Joi.string().valid(null, 'new', 'in progress', 'done'),
     }),
     taskPATCH: Joi.object().keys({
         estimatedTime: Joi.number().integer().positive().allow(null, 0),
+        status: Joi.string(),
     }),
     taskID: Joi.object().keys({
         id: Joi.string().required(),
