@@ -93,24 +93,33 @@ async function create(props, user) {
 
 async function aggregateUserTasks(userId) {
     try {
-        const result = await userModel.aggregate([
-            {
-                $match: { _id: mongoose.Types.ObjectId(userId) },
-            },
-            {
-                $lookup: {
-                    from: 'tasks', localField: '_id', foreignField: 'assignee', as: 'tasks',
+        const result = await userModel.aggregate(
+            [
+                {
+                    $match: { _id: mongoose.Types.ObjectId(userId) },
                 },
-            },
-            {
-                $project: {
-                    name: { $concat: ['$firstName', ' ', '$lastName'] },
-                    tasks: '$tasks',
-                    totalTasks: { $size: '$tasks' },
-                    totalEstimation: { $sum: '$tasks.estimatedTime' },
+                {
+                    $lookup: {
+                        from: 'tasks',
+                        let: { id: '$_id', assignee: 'assignee' },
+                        as: 'tasks',
+                        pipeline: [
+                            { $match: { $expr: { $eq: ['$$id', '$assignee'] } } },
+                            { $sort: { estimatedTime: -1 } },
+                        ],
+                    },
+
                 },
-            },
-        ]);
+                {
+                    $project: {
+                        name: { $concat: ['$firstName', ' ', '$lastName'] },
+                        tasks: '$tasks',
+                        totalTasks: { $size: '$tasks' },
+                        totalEstimation: { $sum: '$tasks.estimatedTime' },
+                    },
+                },
+            ],
+        );
 
         return result[0] || [];
     } catch (error) {
