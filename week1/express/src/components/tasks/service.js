@@ -82,8 +82,6 @@ async function create(props, user) {
     const task = taskModel(data);
 
     try {
-        console.log('Task has been saved successfully');
-
         return task.save();
     } catch (error) {
         console.error(error);

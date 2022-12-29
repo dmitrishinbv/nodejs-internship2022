@@ -1,6 +1,5 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-
 const server = require('../src/server/server');
 
 // eslint-disable-next-line no-unused-vars
@@ -13,9 +12,7 @@ let taskId = '';
 let userId = '';
 let testTask = null;
 
-// eslint-disable-next-line no-undef
 describe('Tasks component', () => {
-    // eslint-disable-next-line no-undef
     it('It should have fail POST user auth!', (done) => {
         const user = {
             email: 'trawwe1r@gmail.com',
@@ -38,7 +35,6 @@ describe('Tasks component', () => {
                 done();
             });
     });
-    // eslint-disable-next-line no-undef
     it('It should have success POST user auth', (done) => {
         const user = {
             email: 'trawwe1r@gmail.com',
@@ -65,7 +61,6 @@ describe('Tasks component', () => {
                 done();
             });
     });
-    // eslint-disable-next-line no-undef
     it('It should GET all the tasks', (done) => {
         chai.request(server)
             .get('/v1/tasks')
@@ -82,7 +77,6 @@ describe('Tasks component', () => {
                     if (res.body && res.body.data && res.body.data.tasks) {
                         const task = res.body.data.tasks[0];
 
-                        // eslint-disable-next-line no-underscore-dangle
                         taskId = task._id;
                         userId = task.assignee;
                     }
@@ -91,7 +85,6 @@ describe('Tasks component', () => {
                 done();
             });
     });
-    // eslint-disable-next-line no-undef
     it('It should GET one task', (done) => {
         chai.request(server)
             .get('/v1/tasks/'.concat(taskId))
@@ -109,7 +102,6 @@ describe('Tasks component', () => {
                 done();
             });
     });
-    // eslint-disable-next-line no-undef
     it('It should create new task', (done) => {
         const task = {
             title: 'Test task',
@@ -139,14 +131,12 @@ describe('Tasks component', () => {
                 done();
             });
     });
-    // eslint-disable-next-line no-undef
     it('It should update estiamated time of the test task', (done) => {
         const task = {
             estimatedTime: 150,
         };
 
         chai.request(server)
-            // eslint-disable-next-line no-underscore-dangle
             .patch('/v1/tasks/'.concat(testTask._id))
             .set('Authorization', token)
             .send(task)
@@ -167,10 +157,8 @@ describe('Tasks component', () => {
                 done();
             });
     });
-    // eslint-disable-next-line no-undef
     it('It should delete the test task', (done) => {
         chai.request(server)
-            // eslint-disable-next-line no-underscore-dangle
             .delete('/v1/tasks/'.concat(testTask._id))
             .set('Authorization', token)
             .end((error, res) => {

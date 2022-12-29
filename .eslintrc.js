@@ -1,6 +1,9 @@
 module.exports = {
     env: {
         es2021: true,
+        mocha: true,
+        commonjs: true,
+        node: true,
     },
     extends: 'airbnb-base',
     overrides: [],
@@ -9,6 +12,7 @@ module.exports = {
         sourceType: 'module',
     },
     rules: {
+        'no-underscore-dangle': 'off',
         indent: ['error', 4],
         'no-console': ['error', {
             allow: ['warn', 'error', 'log'],
