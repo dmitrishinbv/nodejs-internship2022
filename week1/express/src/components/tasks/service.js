@@ -75,20 +75,21 @@ async function create(props, user) {
     if (!data.description) {
         data.description = '';
     }
-    data.assignee = user.user_id;
+    if (!data.assignee) {
+        data.assignee = user.user_id;
+    }
 
     const task = taskModel(data);
 
     try {
-        await task.save();
         console.log('Task has been saved successfully');
+
+        return task.save();
     } catch (error) {
         console.error(error);
 
         return { error: error.message };
     }
-
-    return true;
 }
 
 async function aggregateUserTasks(userId) {

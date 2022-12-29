@@ -27,6 +27,7 @@ async function create(req, res) {
 
         return res.status(201).json({
             message: 'Created',
+            data: result,
         });
     } catch (error) {
         return res.status(500).json({

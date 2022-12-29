@@ -10,9 +10,9 @@ const app = express();
 
 middleware.init(app);
 
-router.init(app);
-
 swagger.init(app);
+
+router.init(app);
 
 app.set('port', process.env.PORT || 3000);
 

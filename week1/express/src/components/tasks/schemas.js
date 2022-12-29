@@ -3,6 +3,7 @@ const Joi = require('joi');
 const schemas = {
     taskPOST: Joi.object().keys({
         title: Joi.string().required(),
+        assignee: Joi.string(),
         description: Joi.string().allow(null, ''),
         createdBy: Joi.string().valid(null, 'Manager', 'Project Manager', 'QA', 'Teach Lead'),
         estimatedTime: Joi.number().integer().positive().allow(null, 0),
